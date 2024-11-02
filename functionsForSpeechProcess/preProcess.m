@@ -1,9 +1,4 @@
 function [y,Fs,segment]=preProcess(filepath,sampleStart,segmentLen)
-arguments
-    filepath
-    sampleStart
-    segmentLen
-end
 % preProcess Summary of this function goes here
 %
 % [y,Fs,segment] = preProcess(filepath) Explain usage here
