@@ -38,45 +38,36 @@ for i = 1:length(feilds)
     %% 1.3 Plot the frequency response of the LPC filter
     % 1.3.1 Compute frequency response and formant frequencies
     fprintf('1.3.1 Compute frequency response and formant frequencies\n');
-    [response,normAngFreq,formantFrequencies] = computeResponeFrequency(lpcCoeffs,segment,Fs);
-    % Transform to frequency domain
-    [Y,frequencyVector] = transformToFrequencyDomain(segment,Fs,response);
+    [response,normAngFreq,formantFrequencies,Y,frequencyVector] = computeResponeFrequency(lpcCoeffs,segment,Fs);
 
     % 1.3.2 Plot the frequency response of the LPC filter
     fprintf("1.3.2 Plot the frequency response of the LPC filter\n");
-    strSegmentLen=num2str(segmentLen);
-    strNthOrder=num2str(NthOrder);
+    strSegmentLen = num2str(segmentLen);
+    strNthOrder = num2str(NthOrder);
     graphName=["frequency_response_of_LPC_filter_when_segmentLength_",strSegmentLen,'_Order_',strNthOrder];
     plotFrequencyResponse(Y,frequencyVector,response,normAngFreq,formantFrequencies,graphName,strSegmentLen,strNthOrder);
 
     %% 1.4 Estimate the first three formant frequencies of the vowel
     fprintf("1.4 Estimate the first three formant frequencies of the vowel\n");
-    firstThreeFormants=estimateFirstThreeFormant(formantFrequencies);
+    firstThreeFormants = estimateFirstThreeFormant(formantFrequencies);
 
     %% 1.5 Estimate the mean fundamental frequency.
     fprintf("1.5 Estimate the mean fundamental frequency\n");
-    meanFundamentalFrequency=estimateMeanFundamentalFrequency(segment,Fs,gender);
+    meanFundamentalFrequency = estimateMeanFundamentalFrequency(segment,Fs,gender);
     fprintf('The mean fundamental frequency is: %d\n',meanFundamentalFrequency);
 
     %% 2 Synthesis
     %% 2.1 Generate a periodic impulse train with the same fundamental frequency
     fprintf("2.1 Generate a periodic impulse train with the same fundamental frequency\n");
 
-    % Make the save path for the synthesis audios
-    saveDir=GlobalSetting.SYNTHESIS_PATH;
-    if ~exist(saveDir, 'dir')
-        % Create the new directory
-        mkdir(saveDir);
-    end
+    % Make the save file for the synthesis audios
     if strcmp(gender,'female')
         saveFile=['synthesized_speech_female_when_segmentLength_',strSegmentLen,'_Order_',strNthOrder,'.wav'];
-        savePath=fullfile(saveDir, saveFile);
     else
         saveFile=['synthesized_speech_male_when_segmentLength_',strSegmentLen,'_Order_',strNthOrder,'.wav'];
-        savePath=fullfile(saveDir, saveFile);
     end
     % Generate impulse train with the same fundamental frequency as the coriginal vowel segment
-    generateImpulseTrain(Fs,meanFundamentalFrequency,lpcCoeffs,savePath)
+    generateImpulseTrain(Fs,meanFundamentalFrequency,lpcCoeffs,saveFile)
 
 end
 

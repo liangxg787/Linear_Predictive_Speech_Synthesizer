@@ -1,4 +1,4 @@
-function [response,normAngFreq,formantFrequencies] = computeResponeFrequency(lpcCoeffs,segment,Fs)
+function [response,normAngFreq,formantFrequencies,Y,frequencyVector] = computeResponeFrequency(lpcCoeffs,segment,Fs)
 % COMPUTERESPONEFREQUENCY Summary of this function goes here
 % 
 % [OUTPUTARGS] = COMPUTERESPONEFREQUENCY(INPUTARGS) Explain usage here
@@ -13,19 +13,25 @@ function [response,normAngFreq,formantFrequencies] = computeResponeFrequency(lpc
 % Date: 2024/10/31 23:09:35 
 % Revision: 0.1 
 
-% Compute frequency response and formant frequencies
-%with the freqz() function, I can plot the frequency response of the digital signal
-[response, normAngFreq] = freqz(1, lpcCoeffs, 2^nextpow2(length(segment)), Fs);
+%% Compute frequency response and formant frequencies
+
+% Compute the first 2 higher power
+N=2^nextpow2(length(segment));
+% Compute the N-point complex frequency response
+[response, normAngFreq] = freqz(1, lpcCoeffs, N, Fs);
 
 
 % Find peaks in the LPC spectrum that correspond to formants
 [~,LOCS] = findpeaks(abs(response));
 
 % Get formant frequencies and make sure they are in the range of human speech formants
-formantFreqs = normAngFreq(LOCS);
-% This should be the estimated formant frequency for human speech
-validFormantsIdx = formantFreqs > 90 & formantFreqs < 8000;
-formantFrequencies = formantFreqs(validFormantsIdx);
+formantFrequencies = normAngFreq(LOCS);
+% Sort the formant frequencies by ascend.
 formantFrequencies = sort(formantFrequencies, 'ascend');
+
+% Compute the FFT of the signal, returns the n-point DFT
+Y = fft(segment, length(response));
+% Frequency vector
+frequencyVector = (0:length(Y)-1) * Fs / length(Y);
 
 end

@@ -15,14 +15,15 @@ maleFile=GlobalSetting.maleFile;
 % Create a struct for sample files of the female or male
 fileStruct = struct('female', femaleFile, 'male', maleFile);
 
-%% 2.2 Experiment with different AR model orders and segment lengths.
+%% 3 Experiment with different AR model orders and segment lengths. Notice: Part 1 and 2 are included in the mainFunction()
 % default length of segment, 100ms
 segmentLen = GlobalSetting.segmentLen;
 % Default Order of the LPC filter, an Nth order forward linear predictor
 NthOrder = GlobalSetting.NthOrder;
 
 % The lengths of segment, 100ms
-segmentLenArray=0.05:0.05:0.2;
+% segmentLenArray=0.05:0.05:0.2;
+segmentLenArray=[];
 % Orders of the LPC filter, an Nth order forward linear predictor
 NthOrdersArray=50:10:100;
 

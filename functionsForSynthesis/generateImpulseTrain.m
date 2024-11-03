@@ -1,17 +1,17 @@
-function generateImpulseTrain(Fs,meanF0,lpcCoeffs,savePath)
+function generateImpulseTrain(Fs,meanF0,lpcCoeffs,saveFile)
 % GENERATEIMPULSETRAIN Summary of this function goes here
-% 
+%
 % [OUTPUTARGS] = GENERATEIMPULSETRAIN(INPUTARGS) Explain usage here
-% 
-% Examples: 
-% 
+%
+% Examples:
+%
 % Provide sample usage code here
-% 
+%
 % See also: List related files here
 
-% Author: Xiaoguang Liang, University of Surrey 
-% Date: 2024/11/01 20:40:37 
-% Revision: 0.1 
+% Author: Xiaoguang Liang, University of Surrey
+% Date: 2024/11/01 20:40:37
+% Revision: 0.1
 
 % Define the variable to manipulate the length of the synthesized signal
 % Unit of measurement: seconds
@@ -35,6 +35,14 @@ synthesizedSignal = synthesizedSignal / max(abs(synthesizedSignal));
 % Play the signal
 % sound(synthesizedSignal,Fs);
 
+% Make the save path for the synthesis audio
+saveDir=GlobalSetting.SYNTHESIS_PATH;
+if ~exist(saveDir, 'dir')
+    % Create the new directory
+    mkdir(saveDir);
+end
+
+savePath = fullfile(saveDir, saveFile);
 % Synthesis signal output
 audiowrite(savePath, synthesizedSignal, Fs);
 
