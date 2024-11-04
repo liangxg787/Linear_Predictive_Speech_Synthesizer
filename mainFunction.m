@@ -38,14 +38,14 @@ for i = 1:length(feilds)
     %% 1.3 Plot the frequency response of the LPC filter
     % 1.3.1 Compute frequency response and formant frequencies
     fprintf('1.3.1 Compute frequency response and formant frequencies\n');
-    [response,normAngFreq,formantFrequencies,Y,frequencyVector] = computeFrequencyResponse(lpcCoeffs,segment,Fs);
+    [response,W,formantFrequencies,Y,frequencyVector] = computeFrequencyResponse(lpcCoeffs,segment,Fs);
 
     % 1.3.2 Plot the frequency response of the LPC filter
     fprintf("1.3.2 Plot the frequency response of the LPC filter\n");
     strSegmentLen = num2str(segmentLen);
     strNthOrder = num2str(NthOrder);
     graphName=["frequency_response_of_LPC_filter_when_segmentLength_",strSegmentLen,'_Order_',strNthOrder];
-    plotFrequencyResponse(Y,frequencyVector,response,normAngFreq,formantFrequencies,graphName,strSegmentLen,strNthOrder);
+    plotFrequencyResponse(Y,frequencyVector,response,W,formantFrequencies,graphName,strSegmentLen,strNthOrder);
 
     %% 1.4 Estimate the first three formant frequencies of the vowel
     fprintf("1.4 Estimate the first three formant frequencies of the vowel\n");

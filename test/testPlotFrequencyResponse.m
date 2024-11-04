@@ -19,6 +19,6 @@ sampleStart = 800;
 
 lpcCoeffs = estimateLpcCoeficients(segment);
 
-[response,normAngFreq,formantFrequencies,Y,frequencyVector] = computeFrequencyResponse(lpcCoeffs,segment,Fs);
+[response,W,formantFrequencies,Y,frequencyVector] = computeFrequencyResponse(lpcCoeffs,segment,Fs);
 
-plotFrequencyResponse(Y,frequencyVector,response,normAngFreq,formantFrequencies);
+plotFrequencyResponse(Y,frequencyVector,response,W,formantFrequencies);

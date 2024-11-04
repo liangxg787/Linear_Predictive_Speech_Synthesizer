@@ -19,6 +19,6 @@ sampleStart = 800;
 
 lpcCoeffs = estimateLpcCoeficients(segment);
 
-[response,normAngFreq,formantFrequencies] = computeFrequencyResponse(lpcCoeffs,segment,Fs);
+[response,W,formantFrequencies] = computeFrequencyResponse(lpcCoeffs,segment,Fs);
 
 firstThreeFormants=estimateFirstThreeFormant(formantFrequencies);

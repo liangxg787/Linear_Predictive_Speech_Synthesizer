@@ -1,4 +1,4 @@
-function plotSpectrumSpectralEnvelope(Y,frequencyVector,response,normAngFreq,formantFrequencies)
+function plotSpectrumSpectralEnvelope(Y,frequencyVector,response,W,formantFrequencies)
 % PLOTFREQUENCYRESPONCE Summary of this function goes here
 %
 % [OUTPUTARGS] = PLOTFREQUENCYRESPONCE(INPUTARGS) Explain usage here
@@ -43,7 +43,7 @@ set(legendName,'Box','off');
 
 % Plot the spectral envelope on the same graph
 subplot(2,1,2);
-plot(normAngFreq, 20*log10(abs(response)), 'b');
+plot(W, 20*log10(abs(response)), 'b');
 % title('Spectral Envelope of the Signal');
 xlabel('Frequency (Hz)');
 ylabel('Amplitude (dB)');
@@ -52,7 +52,7 @@ hold on;
 % Get the magnitude of the response at each formant frequency
 responeseY=zeros(2,1);
 for i = 1:length(formantFrequencies)
-    freqIndex = find(normAngFreq >= formantFrequencies(i), 1);
+    freqIndex = find(W >= formantFrequencies(i), 1);
     responeseY(i) = 20*log10(abs(response(freqIndex)));
     hold on;
 end

@@ -16,20 +16,22 @@ maleFile=GlobalSetting.maleFile;
 fileStruct = struct('female', femaleFile, 'male', maleFile);
 
 %% 3 Experiment with different AR model orders and segment lengths. Notice: Part 1 and 2 are included in the mainFunction()
-% default length of segment, 100ms
+% default length of segment: 0.1, 100ms
 segmentLen = GlobalSetting.segmentLen;
 % Default Order of the LPC filter, an Nth order forward linear predictor
 NthOrder = GlobalSetting.NthOrder;
 
-% The lengths of segment, 100ms
-% segmentLenArray=0.05:0.05:0.2;
-segmentLenArray=[];
-% Orders of the LPC filter, an Nth order forward linear predictor
-NthOrdersArray=50:10:100;
+% The lengths of segment range from 50ms to 200ms
+segmentLenArray=0.05:0.05:0.2;
+% segmentLenArray=[];
+% Orders of the LPC filter, an Nth order forward linear predictor, range from 15 to 35
+NthOrdersArray=15:5:35;
 
+% Experiment
 if isempty(segmentLenArray)
   mainFunction(fileStruct,segmentLen,NthOrder);
 else
+  % Loop over the segment lengths and orders, and run the mainFunction to plot graphs and generate the synthesis audios
   for i=1:length(segmentLenArray)
     segmentLen=segmentLenArray(i);
     for j=1:length(NthOrdersArray)

@@ -1,4 +1,4 @@
-function plotFrequencyResponse(Y,frequencyVector,response,normAngFreq,formantFrequencies,graphName,strSegmentLen,strNthOrder)
+function plotFrequencyResponse(Y,frequencyVector,response,W,formantFrequencies,graphName,strSegmentLen,strNthOrder)
 % PLOTFREQUENCYRESPONSE Summary of this function goes here
 % 
 % [OUTPUTARGS] = PLOTFREQUENCYRESPONSE(INPUTARGS) Explain usage here
@@ -31,7 +31,7 @@ plot(frequencyVector, 20*log10(abs(Y(1:length(frequencyVector)))), "Color","#4DB
 hold on;
 
 % Plot the spectral envelope on the same graph
-plot(normAngFreq, 20*log10(abs(response)), 'r', 'LineWidth', 1.5); 
+plot(W, 20*log10(abs(response)), 'r', 'LineWidth', 1.5); 
 titleStr=['Frequency Domain Representation and LPC Spectral Envelope. Segment Length:',strSegmentLen,' Order:',strNthOrder];
 title(titleStr,'FontSize', 12);
 xlabel('Frequency (Hz)');
@@ -41,8 +41,8 @@ ylabel('Amplitude (dB)');
 % because it wasn't very clear with x on the same plot as the signal
 % spectrum 
 for i = 1:length(formantFrequencies)
-    freqIndex = find(normAngFreq >= formantFrequencies(i), 1);
-    plot(formantFrequencies(i), 20*log10(abs(response(freqIndex))), 'go', 'MarkerSize', 8, 'MarkerFaceColor', 'g');
+    freqIndex = find(W >= formantFrequencies(i), 1);
+    plot(formantFrequencies(i), 20*log10(abs(response(freqIndex))), 'go', 'MarkerSize', 8, 'MarkerFaceColor', 'b');
 end
 
 legend('Signal Spectrum', 'LPC Spectral Envelope', 'Formant Frequencies');

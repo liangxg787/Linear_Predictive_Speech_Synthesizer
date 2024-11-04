@@ -1,4 +1,4 @@
-function [response,normAngFreq,formantFrequencies,Y,frequencyVector] = computeFrequencyResponse(lpcCoeffs,segment,Fs)
+function [response,W,formantFrequencies,Y,frequencyVector] = computeFrequencyResponse(lpcCoeffs,segment,Fs)
 % COMPUTEFREQUENCYRESPONSE Summary of this function goes here
 % 
 % [OUTPUTARGS] = COMPUTEFREQUENCYRESPONSE(INPUTARGS) Explain usage here
@@ -18,14 +18,14 @@ function [response,normAngFreq,formantFrequencies,Y,frequencyVector] = computeFr
 % Compute the first 2 higher power
 N=2^nextpow2(length(segment));
 % Compute the N-point complex frequency response
-[response, normAngFreq] = freqz(1, lpcCoeffs, N, Fs);
+[response, W] = freqz(1, lpcCoeffs, N, Fs);
 
 
 % Find peaks in the LPC spectrum that correspond to formants
 [~,LOCS] = findpeaks(abs(response));
 
 % Get formant frequencies and make sure they are in the range of human speech formants
-formantFrequencies = normAngFreq(LOCS);
+formantFrequencies = W(LOCS);
 
 % Compute the FFT of the signal, returns the n-point DFT
 Y = fft(segment, length(response));
