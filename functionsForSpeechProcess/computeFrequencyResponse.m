@@ -26,8 +26,6 @@ N=2^nextpow2(length(segment));
 
 % Get formant frequencies and make sure they are in the range of human speech formants
 formantFrequencies = normAngFreq(LOCS);
-% Sort the formant frequencies by ascend.
-formantFrequencies = sort(formantFrequencies, 'ascend');
 
 % Compute the FFT of the signal, returns the n-point DFT
 Y = fft(segment, length(response));

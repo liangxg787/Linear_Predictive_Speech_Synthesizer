@@ -36,6 +36,7 @@ autocorrSegment = xcorr(segment);
 % Filter peaks within the expected lag range for female
 expectedPeaks = LOCS(LOCS >= minLag & LOCS <= maxLag);
 
+
 % Calculate fundamental frequencies (F0) in Hz for female
 fundamentalFrequencies = sampleRate ./ expectedPeaks;
 
