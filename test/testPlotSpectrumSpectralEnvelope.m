@@ -20,6 +20,6 @@ sampleStart = 800;
 
 lpcCoeffs = estimateLpcCoeficients(segment);
 
-[response,normAngFreq,formantFrequencies,Y,frequencyVector] = computeResponeFrequency(lpcCoeffs,segment,Fs);
+[response,normAngFreq,formantFrequencies,Y,frequencyVector] = computeFrequencyResponse(lpcCoeffs,segment,Fs);
 
 plotSpectrumSpectralEnvelope(Y,frequencyVector,response,normAngFreq,formantFrequencies);

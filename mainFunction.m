@@ -38,7 +38,7 @@ for i = 1:length(feilds)
     %% 1.3 Plot the frequency response of the LPC filter
     % 1.3.1 Compute frequency response and formant frequencies
     fprintf('1.3.1 Compute frequency response and formant frequencies\n');
-    [response,normAngFreq,formantFrequencies,Y,frequencyVector] = computeResponeFrequency(lpcCoeffs,segment,Fs);
+    [response,normAngFreq,formantFrequencies,Y,frequencyVector] = computeFrequencyResponse(lpcCoeffs,segment,Fs);
 
     % 1.3.2 Plot the frequency response of the LPC filter
     fprintf("1.3.2 Plot the frequency response of the LPC filter\n");

@@ -13,13 +13,13 @@ function meanFundamentalFrequency=estimateMeanFundamentalFrequency(segment,sampl
 % Date: 2024/10/30 10:52:36 
 % Revision: 0.1 
 
-% Define the expected F0 range, (80-150 Hz) for male and (165-255 Hz) for female
+% Define the expected F0 range, (90-155 Hz) for male and (165-255 Hz) for female
 if strcmp(gender,'female')
     minF0 = 165;
     maxF0 = 255;
 else
-    minF0 = 80;
-    maxF0 = 150;
+    minF0 = 90;
+    maxF0 = 155;
 end
 
 % Calculate the lag values corresponding to the F0 range female

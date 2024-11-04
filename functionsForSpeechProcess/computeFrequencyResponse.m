@@ -1,7 +1,7 @@
-function [response,normAngFreq,formantFrequencies,Y,frequencyVector] = computeResponeFrequency(lpcCoeffs,segment,Fs)
-% COMPUTERESPONEFREQUENCY Summary of this function goes here
+function [response,normAngFreq,formantFrequencies,Y,frequencyVector] = computeFrequencyResponse(lpcCoeffs,segment,Fs)
+% COMPUTEFREQUENCYRESPONSE Summary of this function goes here
 % 
-% [OUTPUTARGS] = COMPUTERESPONEFREQUENCY(INPUTARGS) Explain usage here
+% [OUTPUTARGS] = COMPUTEFREQUENCYRESPONSE(INPUTARGS) Explain usage here
 % 
 % Examples: 
 % 
