@@ -1,4 +1,4 @@
-function plotFrequencyResponse(Y,frequencyVector,response,W,formantFrequencies,graphName,strSegmentLen,strNthOrder)
+function plotFrequencyResponse(Y,frequencyVector,response,W,formantFrequencies,graphName)
 % PLOTFREQUENCYRESPONSE Summary of this function goes here
 % 
 % [OUTPUTARGS] = PLOTFREQUENCYRESPONSE(INPUTARGS) Explain usage here
@@ -13,8 +13,9 @@ function plotFrequencyResponse(Y,frequencyVector,response,W,formantFrequencies,g
 % Date: 2024/11/02 15:23:18 
 % Revision: 0.1 
 
-figure('Position',[100 100 800 500],'Visible', 'off');
 % Adjust the axes position for margins
+figure('Position',[100 100 800 500],'Visible', 'off');
+
 % Get current axes
 ax = gca;
 % Position: [left, bottom, width, height]
@@ -26,7 +27,7 @@ set(gcf, 'PaperPositionMode', 'auto');
 % Set the font format of axis
 set(gca, 'Fontname', 'Times New Roman', 'Fontsize', 10);
 
-% Plot frequency domain representation
+% Plot frequency domain representation of original segment
 plot(frequencyVector, 20*log10(abs(Y(1:length(frequencyVector)))), "Color","#4DBEEE"); 
 hold on;
 

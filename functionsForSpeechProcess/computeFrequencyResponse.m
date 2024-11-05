@@ -15,20 +15,20 @@ function [response,W,formantFrequencies,Y,frequencyVector] = computeFrequencyRes
 
 %% Compute frequency response and formant frequencies
 
-% Compute the first 2 higher power
+% Using nextpow2 to calculate the number of frequency points 
 N=2^nextpow2(length(segment));
-% Compute the N-point complex frequency response
-[response, W] = freqz(1, lpcCoeffs, N, Fs);
 
+% Compute the N-point complex frequency response of the LPC filter
+% Got the N-point complex frequency response: response, and the N-point frequency vector: W
+[response, W] = freqz(1, lpcCoeffs, N, Fs);
 
 % Find peaks in the LPC spectrum that correspond to formants
 [~,LOCS] = findpeaks(abs(response));
-
-% Get formant frequencies and make sure they are in the range of human speech formants
+% Get formant frequencies
 formantFrequencies = W(LOCS);
 
 % Compute the FFT of the signal, returns the n-point DFT
-Y = fft(segment, length(response));
+Y = fft(segment, N);
 % Frequency vector
 frequencyVector = (0:length(Y)-1) * Fs / length(Y);
 

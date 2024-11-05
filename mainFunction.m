@@ -45,7 +45,7 @@ for i = 1:length(feilds)
     strSegmentLen = num2str(segmentLen);
     strNthOrder = num2str(NthOrder);
     graphName=["frequency_response_of_LPC_filter_when_segmentLength_",strSegmentLen,'_Order_',strNthOrder];
-    plotFrequencyResponse(Y,frequencyVector,response,W,formantFrequencies,graphName,strSegmentLen,strNthOrder);
+    plotFrequencyResponse(Y,frequencyVector,response,W,formantFrequencies,graphName);
 
     %% 1.4 Estimate the first three formant frequencies of the vowel
     fprintf("1.4 Estimate the first three formant frequencies of the vowel\n");
@@ -67,7 +67,7 @@ for i = 1:length(feilds)
         saveFile=['synthesized_speech_male_when_segmentLength_',strSegmentLen,'_Order_',strNthOrder,'.wav'];
     end
     % Generate impulse train with the same fundamental frequency as the coriginal vowel segment
-    generateImpulseTrain(Fs,meanFundamentalFrequency,lpcCoeffs,saveFile)
+    speechSynthesis(Fs,meanFundamentalFrequency,lpcCoeffs,saveFile)
 
 end
 

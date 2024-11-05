@@ -21,4 +21,4 @@ lpcCoeffs = estimateLpcCoeficients(segment);
 gender='female';
 meanFundamentalFrequency=estimateMeanFundamentalFrequency(segment,Fs,gender);
 
-generateImpulseTrain(Fs,meanFundamentalFrequency,lpcCoeffs,gender);
+speechSynthesis(Fs,meanFundamentalFrequency,lpcCoeffs,gender);

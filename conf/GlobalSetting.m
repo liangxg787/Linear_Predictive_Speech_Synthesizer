@@ -7,7 +7,7 @@ classdef GlobalSetting
         femaleFile="data/speech/had_f.wav"
         % Male vowel phoneme sample, had_m.wav
         maleFile="data/speech/had_m.wav"
-        % The length of segment, 100ms
+        % The length of segment: 0.1, 100ms
         segmentLen = 0.1;
         % Order of the LPC filter
         NthOrder = 70

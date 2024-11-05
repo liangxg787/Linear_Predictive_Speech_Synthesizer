@@ -1,7 +1,7 @@
-function generateImpulseTrain(Fs,meanF0,lpcCoeffs,saveFile)
-% GENERATEIMPULSETRAIN Summary of this function goes here
+function speechSynthesis(Fs,meanF0,lpcCoeffs,saveFile)
+% SPEECHSYNTHESIS Summary of this function goes here
 %
-% [OUTPUTARGS] = GENERATEIMPULSETRAIN(INPUTARGS) Explain usage here
+% [OUTPUTARGS] = SPEECHSYNTHESIS(INPUTARGS) Explain usage here
 %
 % Examples:
 %
