@@ -38,14 +38,13 @@ for i = 1:length(feilds)
     %% 1.3 Plot the frequency response of the LPC filter
     % 1.3.1 Compute frequency response and formant frequencies
     fprintf('1.3.1 Compute frequency response and formant frequencies\n');
-    [response,W,formantFrequencies,Y,frequencyVector] = computeFrequencyResponse(lpcCoeffs,segment,Fs);
+    [H,W,formantFrequencies,Y,frequencyVector] = computeFrequencyResponse(lpcCoeffs,segment,Fs);
 
     % 1.3.2 Plot the frequency response of the LPC filter
     fprintf("1.3.2 Plot the frequency response of the LPC filter\n");
-    strSegmentLen = num2str(segmentLen);
+    strSegmentLen = num2str(segmentLen*1000);
     strNthOrder = num2str(NthOrder);
-    graphName=["frequency_response_of_LPC_filter_when_segmentLength_",strSegmentLen,'_Order_',strNthOrder];
-    plotFrequencyResponse(Y,frequencyVector,response,W,formantFrequencies,graphName);
+    plotFrequencyResponse(H,W,formantFrequencies,Y,frequencyVector,strSegmentLen,strNthOrder,gender);
 
     %% 1.4 Estimate the first three formant frequencies of the vowel
     fprintf("1.4 Estimate the first three formant frequencies of the vowel\n");
@@ -59,7 +58,6 @@ for i = 1:length(feilds)
     %% 2 Synthesis
     %% 2.1 Generate a periodic impulse train with the same fundamental frequency
     fprintf("2.1 Generate a periodic impulse train with the same fundamental frequency\n");
-
     % Make the save file for the synthesis audios
     if strcmp(gender,'female')
         saveFile=['synthesized_speech_female_when_segmentLength_',strSegmentLen,'_Order_',strNthOrder,'.wav'];

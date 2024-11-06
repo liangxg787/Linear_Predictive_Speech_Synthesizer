@@ -10,7 +10,7 @@ classdef GlobalSetting
         % The length of segment: 0.1, 100ms
         segmentLen = 0.1;
         % Order of the LPC filter
-        NthOrder = 70
+        NthOrder = 25
         % Graphs save path
         GRAPH_PATH="data/graphs"
         % Synthesis save path

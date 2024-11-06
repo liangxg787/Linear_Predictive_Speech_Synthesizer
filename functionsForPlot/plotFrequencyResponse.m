@@ -1,4 +1,4 @@
-function plotFrequencyResponse(Y,frequencyVector,response,W,formantFrequencies,graphName)
+function plotFrequencyResponse(H,W,formantFrequencies,Y,frequencyVector,strSegmentLen,strNthOrder,gender)
 % PLOTFREQUENCYRESPONSE Summary of this function goes here
 % 
 % [OUTPUTARGS] = PLOTFREQUENCYRESPONSE(INPUTARGS) Explain usage here
@@ -27,29 +27,45 @@ set(gcf, 'PaperPositionMode', 'auto');
 % Set the font format of axis
 set(gca, 'Fontname', 'Times New Roman', 'Fontsize', 10);
 
-% Plot frequency domain representation of original segment
-plot(frequencyVector, 20*log10(abs(Y(1:length(frequencyVector)))), "Color","#4DBEEE"); 
+% Plot the amplitude spectrum of original segment
+% plot(frequencyVector, 20*log10(abs(Y)), "Color","#4DBEEE");
+plot(frequencyVector, Y, "Color","#4DBEEE"); 
+%this zooms in the plot to find the formants clearly
+maxW=max(W); 
+xlim([0 maxW+100]);
 hold on;
 
 % Plot the spectral envelope on the same graph
-plot(W, 20*log10(abs(response)), 'r', 'LineWidth', 1.5); 
-titleStr=['Frequency Domain Representation and LPC Spectral Envelope. Segment Length:',strSegmentLen,' Order:',strNthOrder];
-title(titleStr,'FontSize', 12);
+plot(W, H, 'r', 'LineWidth', 1.5); 
 xlabel('Frequency (Hz)');
 ylabel('Amplitude (dB)');
 
-% Mark the formant frequencies on the plot. Use pretty big green circles
-% because it wasn't very clear with x on the same plot as the signal
-% spectrum 
+% Get the magnitude of the response at each formant frequency
+formantMag=zeros(2,1);
 for i = 1:length(formantFrequencies)
     freqIndex = find(W >= formantFrequencies(i), 1);
-    plot(formantFrequencies(i), 20*log10(abs(response(freqIndex))), 'go', 'MarkerSize', 8, 'MarkerFaceColor', 'b');
+    formantMag(i) = H(freqIndex);
+    hold on;
 end
 
-legend('Signal Spectrum', 'LPC Spectral Envelope', 'Formant Frequencies');
+% Plot the formant frequencies points
+sz=10;
+scatter(formantFrequencies,formantMag,sz,"filled", "o","MarkerFaceColor","b")
+
+% % Mark the formant frequencies on the plot.
+% for i = 1:length(formantFrequencies)
+%     freqIndex = find(W >= formantFrequencies(i), 1);
+%     plot(formantFrequencies(i),H(freqIndex), 'o', 'MarkerSize', 5, 'MarkerFaceColor', 'b');
+% end
+
+titleStr=['LPC filter response and segment amplitude spectrum for ',gender,' vowel. ', 'Segment Length:',strSegmentLen,'ms, Order:',strNthOrder];
+title(titleStr,'FontSize', 12);
+
+legend('Original Segment Spectrum', 'LPC Frequency response', 'Formant Frequencies');
 hold off;
 
 % Save graph
+graphName=["LPC_response_and_segment_amplitude_spectrum_",gender,'_segment_length_',strSegmentLen,'ms_Order_',strNthOrder];
 saveGraph(gcf,graphName);
 
 % Close the invisible figure (optional if you don’t need it anymore)

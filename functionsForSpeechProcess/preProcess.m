@@ -30,6 +30,6 @@ function [y,Fs,segment]=preProcess(filepath,sampleStart,segmentLen)
 segmentSpan = round(segmentLen * Fs);
 
 % Extract the specified duration segment from the speech signal
-segment = y(sampleStart:sampleStart+segmentSpan-1);
+segment = y(sampleStart:sampleStart+segmentSpan);
 
 end
