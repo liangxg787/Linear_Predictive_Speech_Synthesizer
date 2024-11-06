@@ -1,4 +1,4 @@
-function mainFunction(fileStruct,segmentLen,NthOrder)
+function experimentArgs=mainFunction(fileStruct,segmentLen,NthOrder,ExperimentMode,experimentArgs)
 % MAINFUNCTION Summary of this function goes here
 %
 % [OUTPUTARGS] = MAINFUNCTION(INPUTARGS) Explain usage here
@@ -34,17 +34,32 @@ for i = 1:length(feilds)
     fprintf('1.2 Estimate the LPC coefficients\n');
     fprintf('The Nth order of LPC is: %d\n',NthOrder);
     lpcCoeffs = estimateLpcCoeficients(segment,NthOrder);
-
+    
     %% 1.3 Plot the frequency response of the LPC filter
     % 1.3.1 Compute frequency response and formant frequencies
     fprintf('1.3.1 Compute frequency response and formant frequencies\n');
     [H,W,formantFrequencies,Y,frequencyVector] = computeFrequencyResponse(lpcCoeffs,segment,Fs);
-
-    % 1.3.2 Plot the frequency response of the LPC filter
-    fprintf("1.3.2 Plot the frequency response of the LPC filter\n");
+    
+    % Save the output arguments
+    if ExperimentMode == 1
+        experimentArgs(end+1).gender = gender;
+        experimentArgs(end).segmentLen = segmentLen;
+        experimentArgs(end).NthOrder = NthOrder;
+        experimentArgs(end).H = H;
+        experimentArgs(end).W = W;
+        experimentArgs(end).formantFrequencies = formantFrequencies;
+        experimentArgs(end).Y = Y;
+        experimentArgs(end).frequencyVector = frequencyVector;
+    end
+    
     strSegmentLen = num2str(segmentLen*1000);
     strNthOrder = num2str(NthOrder);
-    plotFrequencyResponse(H,W,formantFrequencies,Y,frequencyVector,strSegmentLen,strNthOrder,gender);
+    % Only on experiment mode, plot the frequency response of the LPC filter
+    if ExperimentMode == 0
+        % 1.3.2 Plot the frequency response of the LPC filter
+        fprintf("1.3.2 Plot the frequency response of the LPC filter\n");
+        plotFrequencyResponse(H,W,formantFrequencies,Y,frequencyVector,strSegmentLen,strNthOrder,gender);
+    end
 
     %% 1.4 Estimate the first three formant frequencies of the vowel
     fprintf("1.4 Estimate the first three formant frequencies of the vowel\n");

@@ -1,4 +1,4 @@
-function [outputArgs] = mainFunctionForExperiments(segmentLenArray,NthOrdersArray)
+function mainFunctionForExperiments(fileStruct,segmentLenArray,NthOrdersArray,ExperimentMode,experimentArgs)
 % MAINFUNCTIONFOREXPERIMENTS Summary of this function goes here
 % 
 % [OUTPUTARGS] = MAINFUNCTIONFOREXPERIMENTS(INPUTARGS) Explain usage here
@@ -19,9 +19,12 @@ for i=1:length(segmentLenArray)
   for j=1:length(NthOrdersArray)
       NthOrder=NthOrdersArray(j);
       fprintf('>>> Experiment when Segment Length: %f and Order: %s\n',segmentLen,NthOrder);
-      mainFunction(fileStruct,segmentLen,NthOrder);
+      experimentArgs=mainFunction(fileStruct,segmentLen,NthOrder,ExperimentMode,experimentArgs);
   end
 end
+
+% Plot all the graph
+plotExperimentGraph(experimentArgs);
 
 
 end

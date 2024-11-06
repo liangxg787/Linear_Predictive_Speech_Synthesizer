@@ -28,14 +28,13 @@ set(gcf, 'PaperPositionMode', 'auto');
 set(gca, 'Fontname', 'Times New Roman', 'Fontsize', 10);
 
 % Plot the amplitude spectrum of original segment
-% plot(frequencyVector, 20*log10(abs(Y)), "Color","#4DBEEE");
-plot(frequencyVector, Y, "Color","#4DBEEE"); 
+plot(frequencyVector, Y, "Color","#8C92AC"); 
 %this zooms in the plot to find the formants clearly
 maxW=max(W); 
 xlim([0 maxW+100]);
 hold on;
 
-% Plot the spectral envelope on the same graph
+% Plot LPC frequency response on the graph
 plot(W, H, 'r', 'LineWidth', 1.5); 
 xlabel('Frequency (Hz)');
 ylabel('Amplitude (dB)');
@@ -45,18 +44,11 @@ formantMag=zeros(2,1);
 for i = 1:length(formantFrequencies)
     freqIndex = find(W >= formantFrequencies(i), 1);
     formantMag(i) = H(freqIndex);
-    hold on;
 end
 
 % Plot the formant frequencies points
 sz=10;
 scatter(formantFrequencies,formantMag,sz,"filled", "o","MarkerFaceColor","b")
-
-% % Mark the formant frequencies on the plot.
-% for i = 1:length(formantFrequencies)
-%     freqIndex = find(W >= formantFrequencies(i), 1);
-%     plot(formantFrequencies(i),H(freqIndex), 'o', 'MarkerSize', 5, 'MarkerFaceColor', 'b');
-% end
 
 titleStr=['LPC filter response and segment amplitude spectrum for ',gender,' vowel. ', 'Segment Length:',strSegmentLen,'ms, Order:',strNthOrder];
 title(titleStr,'FontSize', 12);
@@ -68,7 +60,7 @@ hold off;
 graphName=["LPC_response_and_segment_amplitude_spectrum_",gender,'_segment_length_',strSegmentLen,'ms_Order_',strNthOrder];
 saveGraph(gcf,graphName);
 
-% Close the invisible figure (optional if you don’t need it anymore)
+% Close the invisible figure
 close(figure);
 
 

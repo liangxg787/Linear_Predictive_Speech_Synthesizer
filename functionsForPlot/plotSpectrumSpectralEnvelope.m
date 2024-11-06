@@ -49,12 +49,17 @@ xlabel('Frequency (Hz)');
 ylabel('Amplitude (dB)');
 hold on;
 
+% % Mark the formant frequencies on the plot.
+% for i = 1:length(formantFrequencies)
+%     freqIndex = find(W >= formantFrequencies(i), 1);
+%     plot(formantFrequencies(i),H(freqIndex), 'o', 'MarkerSize', 5, 'MarkerFaceColor', 'b');
+% end
+
 % Get the magnitude of the response at each formant frequency
 responeseY=zeros(2,1);
 for i = 1:length(formantFrequencies)
     freqIndex = find(W >= formantFrequencies(i), 1);
     responeseY(i) = 20*log10(abs(response(freqIndex)));
-    hold on;
 end
 
 % Plot the formant frequencies points
