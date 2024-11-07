@@ -29,7 +29,7 @@ set(gca, 'Fontname', 'Times New Roman', 'Fontsize', 10);
 
 % Plot the amplitude spectrum of original segment
 plot(frequencyVector, Y, "Color","#8C92AC"); 
-%this zooms in the plot to find the formants clearly
+% Zooms in the plot to easily observe the spectrums 
 maxW=max(W); 
 xlim([0 maxW+100]);
 hold on;
@@ -53,7 +53,7 @@ scatter(formantFrequencies,formantMag,sz,"filled", "o","MarkerFaceColor","b")
 titleStr=['LPC filter response and segment amplitude spectrum for ',gender,' vowel. ', 'Segment Length:',strSegmentLen,'ms, Order:',strNthOrder];
 title(titleStr,'FontSize', 12);
 
-legend('Original Segment Spectrum', 'LPC Frequency response', 'Formant Frequencies');
+legend('Original Segment Spectrum', 'LPC Frequency Response', 'First Three Formant Frequencies');
 hold off;
 
 % Save graph

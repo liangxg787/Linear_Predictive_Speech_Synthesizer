@@ -83,7 +83,7 @@ for i=1:length(genderUnique)
  
             % Plot LPC frequency response on the graph
             h(l) = plot(W, H, 'Color', colors(k, :), 'LineWidth', 1.5);
-            legendLabels{l} = strjoin(['LPC Frequency response, Order:' NthOrders(k)]); % Add label to the legend array
+            legendLabels{l} = strjoin(['LPC Frequency Response, Order:' NthOrders(k)]); % Add label to the legend array
             l = l+1;
             xlabel('Frequency (Hz)');
             ylabel('Amplitude (dB)');
@@ -98,7 +98,7 @@ for i=1:length(genderUnique)
             % Plot the formant frequencies points
             sz=10;
             h(l) = scatter(formantFrequencies,formantMag,sz,"filled", "o","MarkerFaceColor", 'k');
-            legendLabels{l} = 'Formant Frequencies';
+            legendLabels{l} = 'First Three Formant Frequencies';
             l = l+1;
 
             hold on;
@@ -158,29 +158,30 @@ for i=1:length(genderUnique)
           H = cell2mat(HData(idx));
           W = cell2mat(WData(idx));
           formantFrequencies = cell2mat(formantFrequenciesData(idx));
-          Y = cell2mat(YData(idx));
-          frequencyVector = cell2mat(frequencyVectorData(idx));
+          % Y = cell2mat(YData(idx));
+          % frequencyVector = cell2mat(frequencyVectorData(idx));
 
-          if k == 1
-            % Plot the amplitude spectrum of original segment
-            h(l) = plot(frequencyVector, Y, "Color","#8C92AC");
-            legendLabels{l} = 'Original Segment Spectrum'; % Add label to the legend array
-            l = l+1;
-          end
-          %this zooms in the plot to find the formants clearly
-          maxW=max(W);
-          xlim([0 maxW+100]);
-          hold on;
+          % if k == 1
+          %   % Plot the amplitude spectrum of original segment
+          %   h(l) = plot(frequencyVector, Y, "Color","#8C92AC");
+          %   legendLabels{l} = 'Original Segment Spectrum'; % Add label to the legend array
+          %   l = l+1;
+          % end
+          % %this zooms in the plot to find the formants clearly
+          % maxW=max(W);
+          % xlim([0 maxW+100]);
+          % hold on;
 
           % Plot LPC frequency response on the graph
           h(l) = plot(W, H, 'Color', colors(k, :), 'LineWidth', 1.5);
           strSegmentLen = segmentLens{k};
           strSegmentLen = num2str(str2num(strSegmentLen)*1000);
-          label_ = {'LPC Frequency response, Segment length:',strSegmentLen,'ms'};
+          label_ = {'LPC Frequency Response, Segment length:',strSegmentLen,'ms'};
           legendLabels{l} = strjoin(label_); % Add label to the legend array
           l = l+1;
           xlabel('Frequency (Hz)');
           ylabel('Amplitude (dB)');
+          hold on;
 
           % Get the magnitude of the response at each formant frequency
           formantMag=zeros(2,1);
@@ -192,7 +193,7 @@ for i=1:length(genderUnique)
           % Plot the formant frequencies points
           sz=10;
           h(l) = scatter(formantFrequencies,formantMag,sz,"filled", "o","MarkerFaceColor", 'k');
-          legendLabels{l} = 'Formant Frequencies';
+          legendLabels{l} = 'First Three Formant Frequencies';
           l = l+1;
 
           hold on;

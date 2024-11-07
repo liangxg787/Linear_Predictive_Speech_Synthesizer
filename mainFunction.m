@@ -39,6 +39,9 @@ for i = 1:length(feilds)
     % 1.3.1 Compute frequency response and formant frequencies
     fprintf('1.3.1 Compute frequency response and formant frequencies\n');
     [H,W,formantFrequencies,Y,frequencyVector] = computeFrequencyResponse(lpcCoeffs,segment,Fs);
+
+    % Get the first three formant frequencies of the vowel and plot in then plot in the graph
+    formantFrequencies = estimateFirstThreeFormant(formantFrequencies);
     
     % Save the output arguments
     if ExperimentMode == 1
@@ -63,7 +66,7 @@ for i = 1:length(feilds)
 
     %% 1.4 Estimate the first three formant frequencies of the vowel
     fprintf("1.4 Estimate the first three formant frequencies of the vowel\n");
-    firstThreeFormants = estimateFirstThreeFormant(formantFrequencies);
+    firstThreeFormants = formantFrequencies;
 
     %% 1.5 Estimate the mean fundamental frequency.
     fprintf("1.5 Estimate the mean fundamental frequency\n");

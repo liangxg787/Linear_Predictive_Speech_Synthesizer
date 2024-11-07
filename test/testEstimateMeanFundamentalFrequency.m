@@ -12,7 +12,10 @@ femaleFile=GlobalSetting.femaleFile;
 % Male vowel phoneme sample, had_m.wav
 maleFile=GlobalSetting.maleFile;
 
+% default length of segment: 0.1, 100ms
+segmentLen = GlobalSetting.segmentLen;
+
 sampleStart = 800;
-[y,Fs,segment]=preProcess(maleFile,sampleStart);
+[y,Fs,segment]=preProcess(maleFile,sampleStart,segmentLen);
 
 meanFundamentalFrequency=estimateMeanFundamentalFrequency(segment,Fs,'male');

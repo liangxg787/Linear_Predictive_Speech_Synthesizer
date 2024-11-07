@@ -7,16 +7,24 @@ clc;
 close all;
 clear;
 
-% Create a figure but set it to be invisible
-fig = figure('Visible', 'off');
+% Female vowel phoneme sample, had_f.wav
+femaleFile=GlobalSetting.femaleFile;
+% Male vowel phoneme sample, had_m.wav
+maleFile=GlobalSetting.maleFile;
 
-% Plot the data (this will not display the plot)
-x = 0:0.1:10;
-y = sin(x);
-plot(x, y);
+% Load the speech signal
+[y, fs] = audioread(maleFile); 
 
-% Optionally save the figure to a file if needed
-saveas(fig, 'myPlot.png');  % Save as PNG file
+% Create a time vector for plotting
+t = (0:length(y)-1) / fs;
 
-% Close the invisible figure (optional if you don’t need it anymore)
-close(fig);
+% Plot the time-domain waveform
+plot(t, y);
+
+
+xlabel('Time (seconds)');
+ylabel('Amplitude');
+title('Time-Domain Waveform of Speech Signal');
+
+% Optional: Zoom in on a specific time range for clarity
+% xlim([0 0.5]); % View the first 0.5 seconds
