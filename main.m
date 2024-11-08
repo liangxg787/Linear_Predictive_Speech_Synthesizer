@@ -41,6 +41,7 @@ else
     NthOrdersArray=15:5:35;
     % NthOrdersArray=15:5:20;
 
+    % Start experiments for processing the vowels
     mainFunctionForExperiments(fileStruct,segmentLenArray,NthOrdersArray,ExperimentMode,experimentArgs);
 end
 

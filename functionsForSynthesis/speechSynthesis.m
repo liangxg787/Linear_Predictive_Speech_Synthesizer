@@ -1,13 +1,17 @@
-function speechSynthesis(Fs,meanF0,lpcCoeffs,saveFile)
+function speechSynthesis(Fs, meanF0, lpcCoeffs, saveFile)
 % SPEECHSYNTHESIS Summary of this function goes here
 %
-% [OUTPUTARGS] = SPEECHSYNTHESIS(INPUTARGS) Explain usage here
+% [OUTPUTARGS] = SPEECHSYNTHESIS(INPUTARGS) This function synthesizes speech using the given fundamental frequency, LPC coefficients, and sampling rate.
+% It generates a periodic impulse train, filters it using the LPC coefficients, normalizes the synthesized signal, and saves it to a specified file.
 %
 % Examples:
+% Fs = 16000;
+% meanF0 = 120; % Example mean fundamental frequency
+% lpcCoeffs = [1, -0.8, 0.3]; % Example LPC coefficients
+% saveFile = 'synthesized_speech.wav';
+% speechSynthesis(Fs, meanF0, lpcCoeffs, saveFile);
 %
-% Provide sample usage code here
-%
-% See also: List related files here
+% See also: estimateMeanFundamentalFrequency, estimateLpcCoeficients
 
 % Author: Xiaoguang Liang, University of Surrey
 % Date: 2024/11/01 20:40:37
@@ -33,10 +37,10 @@ synthesizedSignal = filter(1, lpcCoeffs, impulseTrain);
 synthesizedSignal = synthesizedSignal / max(abs(synthesizedSignal));
 
 % Play the signal
-% sound(synthesizedSignal,Fs);
+% sound(synthesizedSignal, Fs);
 
 % Make the save path for the synthesis audio
-saveDir=GlobalSetting.SYNTHESIS_PATH;
+saveDir = GlobalSetting.SYNTHESIS_PATH;
 if ~exist(saveDir, 'dir')
     % Create the new directory
     mkdir(saveDir);
@@ -45,6 +49,5 @@ end
 savePath = fullfile(saveDir, saveFile);
 % Synthesis signal output
 audiowrite(savePath, synthesizedSignal, Fs);
-
 
 end
