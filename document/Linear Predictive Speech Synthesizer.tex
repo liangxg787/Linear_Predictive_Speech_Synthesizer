@@ -271,8 +271,6 @@ Audio file & Segment length & Mean fundamental frequency (Hz) \\ [0.5ex] % inser
 
 \section{Synthesis}
 
-\subsection{Re-synthesize original speech}
-
 In this section, this project generates some synthesis audios of about one second in length by reconstructing the speech signal based on the LPC coefficients. Because the vowel segment is the voiced speech, this project needs to compute the simulated periodic impulse train. The simulated periodic impulse train is the exciation signals which can be corresponding to the vocal cord. Then this project convolves this excitation signsals with LPC coefficients and then pass through the all-pole filter using \verb+filter+ function to get the synthesized signal output\citep{EEEM030}. This progress is shown in the diagram Figure \ref{fig:synthesis}. Finally, by normalizing the synthesis signal, this project can improve clarity of the synthesis signal and makes the output easier to listen to.
 
 \begin{figure}[ht]
@@ -281,10 +279,6 @@ In this section, this project generates some synthesis audios of about one secon
 \end{center}
 \caption{\label{fig:synthesis} Re-synthesize original speech with LPC coefficients\citep{E4896-L06}.}
 \end{figure}
-
-\subsection{Informal subjective assessment}
-
-An informal subjective assessment of the synthesized speech quality.
 
 
 \section{Experiments}

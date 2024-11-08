@@ -7,21 +7,20 @@ clc;
 close all;
 clear;
 
+
 % Female vowel phoneme sample, had_f.wav
 femaleFile=GlobalSetting.femaleFile;
 % Male vowel phoneme sample, had_m.wav
 maleFile=GlobalSetting.maleFile;
-% gender = 'female';
-gender = 'male';
 
 % default length of segment: 0.1, 100ms
 segmentLen = GlobalSetting.segmentLen;
-% Default Order of the LPC filter, an Nth order forward linear predictor
-NthOrder = GlobalSetting.NthOrder; 
-
 % Choose the start point in the segment
-sampleStart = 1;
+sampleStart = 800;
 
-[y,Fs,segment]=preProcess(maleFile,sampleStart,segmentLen);
+[y,Fs,segment]=preProcess(femaleFile,sampleStart,segmentLen);
 
+% Default Order of the LPC filter, an Nth order forward linear predictor
+NthOrder = GlobalSetting.NthOrder;
 lpcCoeffs = estimateLpcCoeficients(segment,NthOrder);
+
