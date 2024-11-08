@@ -208,7 +208,7 @@ for i=1:length(genderUnique)
       hold off;
       
       % Save graph
-      graphName=["Experiment_LPC_response_and_segment_amplitude_spectrum_",gender,'_Order_',strNthOrder,'ms_different_segment_lengths'];
+      graphName=["Experiment_LPC_response_and_segment_amplitude_spectrum_",gender,'_Order_',strNthOrder,'_different_segment_lengths'];
       saveGraph(gcf,graphName);
 
       % Close the invisible figure

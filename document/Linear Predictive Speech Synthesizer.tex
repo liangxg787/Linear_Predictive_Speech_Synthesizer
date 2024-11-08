@@ -1,12 +1,12 @@
-\documentclass[11pt]{article}
+\documentclass{article}
 \usepackage{amsmath,amssymb,amsthm} % AMS styles for extra equation formatting
 \usepackage{graphicx} % for including graphics files
+\usepackage{subfig} % for subfigures
 \usepackage[numbers,sort]{natbib} % for better references control
 \usepackage{hyperref} % for hyperlinks within the paper and references
-\usepackage{titling}  % Include the titling package
 \usepackage{fontspec}  % Allows for system fonts
 \usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}  % Set margins on all sides
-
+\usepackage{setspace} % for line spacing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \hypersetup{colorlinks=true, linkcolor=blue,  anchorcolor=blue,
@@ -19,6 +19,8 @@ urlcolor=blue}
 \marginpar{\textsc{Todo}}
 \framebox{\begin{minipage}[c]{0.90 \textwidth}
 \tt \flushleft #1 \end{minipage}}\vspace{5 mm}\par}
+\newcommand{\setParDis}{\setlength {\parskip} {0.2cm} } % for 0.3cm spacing
+\newcommand{\setParDef}{\setlength {\parskip} {0pt} } % for 0 spacing
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -37,156 +39,315 @@ urlcolor=blue}
 %\linespread{1.6} % double-spacing
 
 \setmainfont{Arial}
+% \doublespacing
+\onehalfspacing
+\setcounter{secnumdepth}{3}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
 
-\title{Linear Predictive Speech Synthesizer}
-% \title{%
-% Linear Predictive Speech Synthesizer \\
-% {\large EEEM030 - Speech & Audio Processing & Recognition \\
-% Assignment 1}}
-% \author{Xiaoguang Liang \\
-%   6844178}
+% \title{This is the title}
+% \author{A.N. Author and A. Friend}
 % \date{\today}
 % \maketitle
-% \newpage
 
 \begin{titlepage}
   \centering  % Center everything on the title page
   \vspace*{\fill}  % Add flexible vertical space at the top to push the title down
 
-  {\Huge\bfseries\thetitle}  % Set the title in large, bold font
-  \vskip 1em  % Add some space between title and author
+  {\Huge\bfseries Linear Predictive Speech Synthesizer}  % Set the title in large, bold font
+  \vskip 0.1em  % Add some space between title and author
 
   {\Large\itshape EEEM030 - Speech \& Audio Processing \& Recognition \\
   Assignment 1}  % Set the author name in a slightly smaller font
-  \vskip 1em  % Add space between author and date
+  \vskip 0.1em  % Add space between author and date
   
   {\normalsize\slshape Xiaoguang Liang}  % Set the author name in a slightly smaller font
-  \vskip 0.5em  % Add space between author and date
+  % \vskip 0.1em  % Add space between author and date
 
   {\normalsize\slshape 6844178}  % Set the author name in a slightly smaller font
-  \vskip 1em  % Add space between author and date
+  % \vskip 0.1em  % Add space between author and date
+
+  {\normalsize\slshape xl01339@surrey.ac.uk}  % Set the author name in a slightly smaller font
+  \vskip 0.1em  % Add space between author and date
   
   {\normalsize\slshape \today}  % Set the date in a smaller font
   
   \vspace*{\fill}  % Add flexible vertical space at the bottom to center the content
 \end{titlepage}
 
-% Ensure all figures/tables are processed before the next page (Contents page)
-% \clearpage
 % Suppress any floats (figures, tables) from appearing on the next page
 \suppressfloats
 
 \tableofcontents
 
 \begin{abstract}
-This is the abstract.
+This report mainly includes the task of modeling, analysizing and synthesizing some vowels  using the source-filter model of speech production. This project estimates the frequency response spectrums and the formant structure of each vowel directly from a real vowel samples by employing a kind of autoregressive (AR) model, linear predictive coding (LPC) and then generates synthesized vowels with passing a periodic impulse train through the all-pole filter obtained.
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Introduction}
+\setParDis
 
-We have a table of contents displayed now, to help with writing the
-paper, but it is normally removed before submitting to a journal.
+This report explores vowel speech by modeling, analyzing, and synthesizing them using the source-filter model of speech production. In practice, this project chooses the speech samples - \verb+had_f.wav+ (one female vowel) and \verb+had_m.wav+ (one male vowel) from sample set. 
 
-References can be cited either directly in the text with
-\verb+\citet+, to refer the reader to a paper like that of
-\citet{Giles2003}, or they can be cited parenthetically
-\citep{Adams2002} with \verb+\citep+. If DOI numbers are in the
-references and \verb+pdflatex+ is used then the resulting PDF will
-have clickable links to the papers in the References.
+The source-filter model of speech production is a widely used approach that separates the speech generation process into two parts: a source of sound (such as a periodic impulse train representing the vibration of vocal folds for voiced sounds) and a filter that represents the resonant properties of the vocal tract\citep{kondoz2005digital}. A diagram of this model is presented in Figure \ref{fig:source-filter}. This model enables the simulation of different speech sounds by manipulating the filter properties while keeping the source consistent.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{First section}
-
-To include a figure we use a floating environment which allows
-\LaTeX\ to put the figure anywhere it wants, and then we refer to it
-by number as figure \ref{fig:sample}.
-
-\begin{figure}
+\begin{figure}[ht]
 \begin{center}
-\includegraphics[width=8cm]{"1_10_s.bmp.png"}
+\includegraphics[width=12cm]{Block diagram of the simplified source-filter model of speech production}
 \end{center}
-\caption{\label{fig:sample} This is the figure caption. Figure
-  captions should be long and descriptive because people actually read
-  them in papers, unlike most of the text.}
+\caption{\label{fig:source-filter} Block diagram of the simplified source-filter model of speech production\citep{kondoz2005digital}.}
 \end{figure}
 
-If \verb+pdflatex+ is used then figures can be PDF, JPEG, PNG, or
-other formats, but cannot be EPS. If plain \verb+latex+ is used, then
-figures can only be EPS. For this reason it's typically best to
-include both EPS and non-EPS versions of each figure. Under Linux the
-commands \verb+epstopdf+ and \verb+convert+ are helpful with this.
+To estimate the formant structure of each vowel, this project uses an autoregressive (AR) model, implemented through LPC. As a practical method for implementing the source-filter model, LPC is an effective technique in speech processing that models the speech signal by predicting each sample as a linear combination of previous samples\citep{kondoz2005digital}. This method helps estimate the resonant frequencies (formants) by approximating the vocal tract’s response. After obtaining the LPC-based filter (all-pole filter), this project passes a periodic impulse train through it to synthesize each vowel sound. This approach allows us to generate vowels that mimic the natural acoustic properties of real speech samples.
+
+The framework for implementing this project is illustrated in Figure \ref{fig:framework}. The details of the implementation is organized as following. Firstly, the report will introduce the model estimation for LPC in \textit{Section 2}. Secondly, the speech synthesis progress will be elaborated in \textit{Section 3}. After that, the report introduce the experiments with different AR model orders and segment lengths in \textit{Section 4}. Next, typical conclusions will be figured out respectively in \textit{Section 5}. The implementation of model estimation and synthesis is completed with Matlab and the Matlab codes will be included in the appendix.
+
+\begin{figure}[ht]
+  \begin{center}
+  \includegraphics[width=18cm]{The framework of implementation of model estimation and synthesis}
+  \end{center}
+  \caption{\label{fig:framework} The framework of implementation of model estimation and synthesis.}
+  \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{First subsection}
+\section{Model Estimation}
 
-Equations should use either the \verb+equation+ environment for single
-line equations:
+\subsection{Preprocessing audio files}
+
+The audio files preprocessing part applies Matlab’s \verb+audioread+ function to read the vowel audio file, which returns the sampled data in $Y$ and the sample rate $Fs$, in $Hertz$. Then, based on the specified segment duration and sampling rate, calculate the number of samples needed to extract.
+
+Here, the sample start point is set to $1$; the segment length is set to $0.1$, as specified by the assignment, to obtain a quasi-stationary segment of approximately $100 ms$ in duration. In \textit{Section 4}, the effects of different segment lengths on model estimation and the generated audio will be discussed.
+
+
+\subsection{Estimate the LPC coefficients}
+
+This section directly uses Matlab’s \verb+lpc+ function to calculate the LPC coefficients. The input parameter for LPC order is set to $25$, and experiments with different order values will be conducted and discussed in the Experiments section.
+
+Since the dynamic range of actual speech signals is large, directly quantizing these signals would require a high number of bits, leading to a high coding rate. To reduce the coding rate while maintaining good speech quality, we can try to decrease the dynamic range of the input signal to the encoder. LPC predicts new sample values based on past samples, then calculates an error signal by subtracting the predicted value from the actual sample value. The dynamic range of this error signal is significantly smaller than that of the original speech signal. By quantizing and encoding the error signal, the required bit rate is greatly reduced, thus lowering the coding rate\citep{kondoz2005digital}.
+
+The mathematical representation of the LPC filter is as follows\citep{kondoz2005digital}:
 \begin{equation}
-\label{eqn:stokes_thm}
-\int_{\Omega} \mathbf{d}\alpha = \int_{\partial \Omega} \alpha
+\label{eqn:LPC}
+H(z) = \frac{1}{(1 + \sum_{i=1}^p \alpha_i z^{-i})}
 \end{equation}
-or one of the \verb+amsmath+ environments (\verb+align+,
-\verb+multline+, etc) for more complex equations. The \verb+align+
-environment is particularly good:
-\begin{align}
-\label{eqn:newton}
-m\vec{a} &= \sum_{i = 1}^N F_i(\vec{x}) \\
-\label{eqn:newton_expanded}
-&= F_1(\vec{x}) + F_2(\vec{x}) + \cdots + F_N(\vec{x})
-\end{align}
 
-\begin{theorem}
-\label{thm:big_result}
-This is how we state a theorem. Lemmas and corollaries are similar.
-\end{theorem}
 
-\begin{proof}
-And this is the proof of our amazing result.
-\end{proof}
+According to the principles of linear predictive analysis, to solve for the linear predictive coefficients, the mean square prediction error of the speech signal must be minimized. There are two classic methods for this: the autocorrelation method and the covariance method. Since Matlab’s \verb+lpc+ function uses the autocorrelation method, only this method is discussed here.
 
-\todo{MW: This is a ToDo box. Comments in here are not part of the
-  paper, but are a discussion about the paper. Start ToDo boxes with
-  your initials so that everyone can keep track of who said what. Once
-  the issue in a ToDo box has been resolved then anyone should delete
-  it, not just the person who wrote it.}
+The LPC coefficients are determined by solving a set of linear equations called the Yule-Walker equations\citep{EEEM030}:
+\[
+\begin{bmatrix}
+\label{bmat:Yule-Walker}
+R_{n}(0) & R_{n}(1) & \dots & R_{n}(p-1) \\
+R_{n}(1) & R_{n}(0) & \dots & R_{n}(p-2) \\
+\vdots  & \vdots  & \ddots  & \vdots  \\
+R_{n}(p-1) & R_{n}(p-2) & \dots & R_{n}(0) 
+\end{bmatrix}
+\begin{bmatrix}
+a_1 \\ a_2 \\ \vdots \\ a_p
+\end{bmatrix}
+=
+\begin{bmatrix}
+R_{n}(1) \\ R_{n}(2) \\ \vdots \\ R_{n}(p)
+\end{bmatrix}
+\]
 
-\todo{MW: To reply to a ToDo box, just put your own after it.}
+here $R_n(j)$ represents the short-time autocorrelation function\citep{EEEM030}:
+\begin{equation}
+\label{eqn:autocorrelation}
+R_n(j) = \sum_{m=0}^{N-1-j} s_n[m] s_n[m+j]; \quad j = 0, 1, \dots, p.
+\end{equation}
 
-\paragraph{Paragraph title.}
-\verb+\paragraph+s can be used to break up long blocks of text and
-help the reader. Paragraph titles should have the first word
-capitalized and then the others lowercase, and they should end with a
-period.
 
-\paragraph{Formatting units.}
-Following Knuth, units should be written like $v =
-10\,\text{m}/\text{s}$ or $p =
-20\,\text{kg}\,\text{m}\,\text{s}^{-1}$. The second form is generally
-preferred.
+\subsection{Frequency response of the LPC filter}
 
-\paragraph{Acronyms.}
-We should try to avoid acronyms wherever possible. The only acronyms
-that should be used are those that are so common that they are more
-easily recognized than their definitions, such as SO(3) or TCP/IP. As
-Richard Murray is fond of saying, defining an acronym just to save
-typing in a paper is very bad for a reader. We can read a familiar
-sequence of words almost as fast as we can read an acronym, and much
-faster if we have to pause to remember what the acronym is actually
-for. Generally speaking, we should limit ourselves to at most one or
-two new acronyms within a paper, and they should be reserved for
-things like algorithm names that we hope other people will also use.
+\subsubsection{Compute frequency response and formant frequencies}
+
+In this section, this project begin by calculating the frequency response of the LPC filter,followed by the computation of the formant frequencies and the N-point DFT of the original segment. These calculation results will then be used to plot the signal in the frequency domain and to compare and analyze the frequency response of the LPC filter with the original signal.
+
+First, the project uses the \verb+nextpow2+ function to compute the number of frequency points . This value controls the resolution between $0$ and the Nyquist frequency (half the sampling rate), where a higher provides finer frequency resolution, and a lower results in a coarser response. The \verb+nextpow2+ function is particularly useful for optimizing efficiency in Fast Fourier Transform (FFT) computations, as it ensures is a power of $2$.
+
+Next, the freqz function is used to calculate the N-point complex frequency response (response) and the N-point frequency vector $W$. In this context, \verb+freqz+ takes four inputs: $1$ (numerator coefficients), $lpcCoeffs$ (LPC coefficients as denominator coefficients), $N$ (number of frequency points), and $Fs$ (sample rate). The $1$ is numerator coefficients and $lpcCoeffs$ is the denominator coefficients in the equation used in \verb+freqz+ function. The equation of \verb+freqz+ function is like this:
+
+\begin{equation}
+\label{eqn:freqz}
+H(e)^{jw} = \frac{B(e)^{jw}}{A(e)^{jw}} = \frac{b(1) + b(1)e^{-jw} + \dots + b(m+1)e^{-jmw}}{a(1) + a(1)e^{-jw} + \dots + a(n+1)e^{-jnw}}
+\end{equation}
+
+As shown in the equation, the given numerator $1$ and denominator coefficients $lpcCoeffs$ are in vectors B and A respectively.
+
+Following this, the \verb+findpeaks+ function is applied to locate local peaks in the N-point complex frequency response. These peaks help identify formant frequencies, which are extracted from the the N-point frequency vector $W$.  The formant frequencies will be used to analyze the frequency response of LPC and the estimate the first three formant frequencies. 
+
+Finally, the \verb+fft+ function is used to compute the N-point discrete Fourier transform (DFT) of the original segment vector, then calculate the frequency  vector of original segment. These results provide a basis for spectral analysis of the original segment and the frequency response of LPC .
+
+
+\subsubsection{LPC response and speech amplitude spectrum}
+
+In this Section, this project plot the amplitude spectrum of the original segement and the LPC filter frequency response spectrum. To make it easier to compare the spectrums, this project puts the curves on one graph and zoom in the graph to easily observe the spectrums with the function \verb+xlim+. 
+
+Figure \ref{fig:response-spectrum-female} and Figure \ref{fig:response-spectrum-male} are the spectrums of \verb+had_f.wav+ (one female vowel)and \verb+had_m.wav+ (one male vowel) repectively. According both of the graphs, it is clear that LPC frequecy response can provide a very good fit to the spectral peaks, but is worse fitting to the spectral valleys. That's because this project are using an all-pole filter model to model the spectrum, but don't use any zero-pole to model the spectral valleys\citep{EEEM030}. 
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=12cm]{LPC_response_and_segment_amplitude_spectrum_female_segment_length_100ms_Order_25}
+\end{center}
+\caption{\label{fig:response-spectrum-female} LPC response and segment amplitude spectrum for female vowel.}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=12cm]{LPC_response_and_segment_amplitude_spectrum_male_segment_length_100ms_Order_25}
+\end{center}
+\caption{\label{fig:response-spectrum-male} LPC response and segment amplitude spectrum for male vowel.}
+\end{figure}
+
+% \begin{figure*}[ht!]
+%   \includegraphics[width=.3\textwidth]{LPC_response_and_segment_amplitude_spectrum_female_segment_length_100ms_Order_25}\hfill
+%   \includegraphics[width=.3\textwidth]{LPC_response_and_segment_amplitude_spectrum_male_segment_length_100ms_Order_25}\hfill
+%   \caption{\label{fig:response-spectrum-female} LPC response and segment amplitude spectrum for female vowel.}
+%   \caption{\label{fig:response-spectrum-male} LPC response and segment amplitude spectrum for male vowel.}
+% \end{figure*}
+
+% \begin{figure}[ht!]
+% \centering
+% \begin{minipage}[b]{0.8\textwidth}
+%   \includegraphics[width=\textwidth]{LPC_response_and_segment_amplitude_spectrum_female_segment_length_100ms_Order_25}
+%   \caption{\label{fig:response-spectrum-female} LPC response and segment spectrum for female vowel.}
+% \end{minipage}
+% \hfill
+% \begin{minipage}[b]{0.8\textwidth}
+%   \includegraphics[width=\textwidth]{LPC_response_and_segment_amplitude_spectrum_male_segment_length_100ms_Order_25}
+%   \caption{\label{fig:response-spectrum-male} LPC response and segment spectrum for male vowel.}
+% \end{minipage}
+% \end{figure}
+
+
+\subsection{Estimate first three formant frequencies}
+
+The first formant frequencies on the female and male vowel segments are shown in Table \ref{table:formant-frequency} and they are also plotted on \ref{fig:response-spectrum-female} and Figure \ref{fig:response-spectrum-male}. All the data of the formant frequencies is produced under the conditions of segment length is 100ms and the order of LPC is 25.
+
+\begin{table}[ht]
+\caption{First three formant frequencies for female and male} % title of Table
+\centering % used for centering table
+\begin{tabular}{c c c c c c} % centered columns (4 columns)
+\hline\hline %inserts double horizontal lines
+Symbol for vowel & Typical word & Audio file & F1 (Hz) & F2 (Hz) & F1 (Hz) \\ [0.5ex] % inserts table
+%heading
+\hline % inserts single horizontal line
+AE & had & \verb+had_f.wav+ & 251.95 & 972.66 & 1936.52 \\ % inserting body of the table
+AE & had & \verb+had_m.wav+ & 706.05 & 1754.88 & 2504.88 \\ [1ex] % [1ex] adds vertical space
+\hline %inserts single line
+\end{tabular}
+\label{table:formant-frequency}
+\end{table}
+
+\subsection{Estimate mean fundamental frequency}
+
+The fundamental frequency, commonly called the fundamental and abbreviated as $f0$ or $f1$, is the lowest frequency in a periodic waveform. It typically appears as the first vertical line in the frequency spectrum and represents the first harmonic.
+
+In this section, the project firstly calculates the auto-correlation sequence using the cross-correlation function \verb+xcorr+, then identifies peaks within the expected lag range using the \verb+findpeaks+ function. Following this, the project computes the lag values for both female and male vowels corresponding to their respective $F0$ ranges, because adult males typically have a fundamental frequency between $90$ and $155 Hz$, while adult females range from $165$ to $255 Hz$\citep{baken2000clinical}.
+
+The results show in the talbe \ref{table:mean-fundamental-frequency}.
+
+\begin{table}[ht]
+\caption{Mean fundamental frequency for female and male} % title of Table
+\centering % used for centering table
+\begin{tabular}{c c c} % centered columns (4 columns)
+\hline\hline %inserts double horizontal lines
+Audio file & Segment length & Mean fundamental frequency (Hz) \\ [0.5ex] % inserts table
+%heading
+\hline % inserts single horizontal line
+\verb+had_f.wav+ & 100ms & 201.89 \\ % inserting body of the table
+\verb+had_m.wav+ & 100ms & 117.22 \\ [1ex] % [1ex] adds vertical space
+\hline %inserts single line
+\end{tabular}
+\label{table:mean-fundamental-frequency}
+\end{table}
+
+\section{Synthesis}
+
+\subsection{Re-synthesize original speech}
+
+In this section, this project generates some synthesis audios of about one second in length by reconstructing the speech signal based on the LPC coefficients. Because the vowel segment is the voiced speech, this project needs to compute the simulated periodic impulse train. The simulated periodic impulse train is the exciation signals which can be corresponding to the vocal cord. Then this project convolves this excitation signsals with LPC coefficients and then pass through the all-pole filter using \verb+filter+ function to get the synthesized signal output\citep{EEEM030}. This progress is shown in the diagram Figure \ref{fig:synthesis}. Finally, by normalizing the synthesis signal, this project can improve clarity of the synthesis signal and makes the output easier to listen to.
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=12cm]{E4896-L06_12}
+\end{center}
+\caption{\label{fig:synthesis} Re-synthesize original speech with LPC coefficients\citep{E4896-L06}.}
+\end{figure}
+
+\subsection{Informal subjective assessment}
+
+An informal subjective assessment of the synthesized speech quality.
+
+
+\section{Experiments}
+
+\subsection{Experimental design}
+
+This experiment uses the variable-controlling approach to examine the impact of different order values and segment lengths on the LPC frequency response and the synthesis speech quality.
+
+In the code implementation, to improve efficiency, all combinations of order values and segment lengths are firstly iterated over, with the results stored in a struct data structure, which includes all generated audio outputs. Then, using the data in the struct, spectrum plots are generated in batches for combinations with the same order and different segment lengths, as well as those with the same segment length and different order values, as shown in Figure \ref{fig:experiments}. It should be noted that different segment lengths produce different original segment spectrums. If all original segment spectrums were plotted in the figure, it would make the chart difficult to interpret clearly. Therefore, in the case of the same order with different segment length combinations, the original segment spectra are not plotted in the figure.
+
+\begin{figure}[!tbp]
+  \centering
+  \subfloat[Spectrum for female, segment length:50ms.]{\includegraphics[width=0.45\textwidth]{Experiment_LPC_response_and_segment_amplitude_spectrum_female_segment_length_50ms_different_Orders}\label{fig:female-segment-50ms}}
+  \hfill
+  \subfloat[Spectrum for female, segment length:200ms.]{\includegraphics[width=0.45\textwidth]{Experiment_LPC_response_and_segment_amplitude_spectrum_female_segment_length_200ms_different_Orders}\label{fig:female-segment-200ms}}
+  \hfill
+  \subfloat[Spectrum for female, order:15.]{\includegraphics[width=0.45\textwidth]{Experiment_LPC_response_and_segment_amplitude_spectrum_female_Order_15_different_segment_lengths}\label{fig:female-order-15}}
+  \hfill
+  \subfloat[Spectrum for female, order:35.]{\includegraphics[width=0.45\textwidth]{Experiment_LPC_response_and_segment_amplitude_spectrum_female_Order_35_different_segment_lengths}\label{fig:female-order-35}}
+  \hfill
+  \subfloat[Spectrum for male, segment length:50ms.]{\includegraphics[width=0.45\textwidth]{Experiment_LPC_response_and_segment_amplitude_spectrum_male_segment_length_50ms_different_Orders}\label{fig:male-segment-50ms}}
+  \hfill
+  \subfloat[Spectrum for male, segment length:200ms.]{\includegraphics[width=0.45\textwidth]{Experiment_LPC_response_and_segment_amplitude_spectrum_male_segment_length_200ms_different_Orders}\label{fig:male-segment-200ms}}
+  \hfill
+  \subfloat[Spectrum for male, order:15.]{\includegraphics[width=0.45\textwidth]{Experiment_LPC_response_and_segment_amplitude_spectrum_male_Order_15_different_segment_lengths}\label{fig:male-order-15}}
+  \hfill
+  \subfloat[Spectrum for male, order:35.]{\includegraphics[width=0.45\textwidth]{Experiment_LPC_response_and_segment_amplitude_spectrum_male_Order_35_different_segment_lengths}\label{fig:male-order-35}}
+  \caption{\label{fig:experiments} Spectrums for experiments with different order values and segment lengths.}
+\end{figure}
+
+\paragraph{Segment length.}
+In the experiments, this project determines that the sample rate of the segment length should be greater than $0$ and less than $2.5$. Therefore, the sample rate of the segment length is set to range from $0.05$ to $0.2$, with a step size of $0.05$.
+
+\paragraph{Order.}
+In practice, LPC filter modeling is typically used to represent the formant structure, making the spectral details from higher orders unnecessary. An LPC order of around $20$-$30$ is generally sufficient to model the first few formants in speech\citep{EEEM030}. Therefore, the LPC order value ranges from $15$ to $35$, with a step size of $5$.
+
+
+\subsection{Comapre the spectrums}
+
+Observe the figures: for the female vowel, under the same LPC order value but with different segment lengths, a longer segment allows the LPC frequency response to more accurately fit the spectral peaks.
+
+for the female vowel, under the same segment length but with different LPC order values, a bigger LPC order values allows the LPC frequency response to more accurately fit the spectral peaks.
+
+\subsection{Informal subjective assessment for speech synthesis}
+
+An informal subjective assessment for all  the synthesized results of experiments.
+
+\paragraph{Pitch.}
+
+
+\paragraph{Timbre.}
+
+\paragraph{Loudness.}
+
+
+\section{Conclusion}
+
+This report demonstrates how to create a source-filter model using an LPC filter to model, synthesize, analyze, and evaluate speech signals. In this project, two parameters need to be adjusted: LPC order and segment length. Variations in these two parameters ultimately lead to different results in both the model analysis and speech synthesis stages. Through experiments, a relatively suitable parameter combination can be identified, resulting in a series of synthesized vowel signals. However,based on informal subjective evaluation, it was found  that due to the limited performance of the LPC filter, the final synthesized vowel speech has some noticeable differences from the original audio.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcommand{\doi}[1]{DOI: \href{http://dx.doi.org/#1}{\nolinkurl{#1}}}
-\bibliographystyle{plainnat}
+\bibliographystyle{unsrt}
 \bibliography{refs}
 
 \end{document}
