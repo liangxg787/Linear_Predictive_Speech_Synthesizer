@@ -8,7 +8,7 @@ all-pole filter obtained.
 ![See the details of the assignment requirement](document/assignment_2024 (1).pdf)
 
 ## Architecture of the project
-![architecture](The framework of implementation of model estimation and synthesis.png)
+![architecture](The_framework_of_implementation_of_model_estimation_and_synthesis.png)
 
 
 ## Structure of codes
