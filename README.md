@@ -5,7 +5,7 @@ EEEM030 Assignment 1.
 This report mainly includes the task of modeling, analysizing and synthesizing some vowels using the source-filter model of speech production. This project estimates the frequency response spectrums and the formant structure of each vowel directly from a real vowel samples by employing a kind of autoregressive (AR) model, linearpredictive coding (LPC) and then generates synthesized vowels with passing a periodic impulse train through the
 all-pole filter obtained.
 
-![See the details of the assignment requirement](document/assignment_2024 (1).pdf)
+[See the details of the assignment requirement](document/assignment_2024(1).pdf)
 
 ## Architecture of the project
 ![architecture](The_framework_of_implementation_of_model_estimation_and_synthesis.png)
